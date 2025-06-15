@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { Note } from "../types/note";
 
-const API_KEY = import.meta.env.VITE_TMDB_TOKEN;
+const API_KEY = import.meta.env.VITE_NOTEHUB_TOKEN;
 const BASE_URL = "https://notehub-public.goit.study/api/notes";
 
 interface FetchNotesResponse {
@@ -17,6 +17,7 @@ export async function fetchNotes(
     params: {
       search: query,
       page: page,
+      perPage: 12,
     },
     headers: {
       Authorization: `Bearer ${API_KEY}`,
@@ -25,7 +26,7 @@ export async function fetchNotes(
   return response.data;
 }
 
-export async function createNote(params: Note) {
+export async function createNote(params: Omit<Note, "id">) {
   const response = await axios.post(BASE_URL, {
     params,
     headers: {
