@@ -4,10 +4,10 @@ import NoteList from "../NoteList/NoteList";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchNotes, deleteNote } from "../../services/noteService";
 import toast from "react-hot-toast";
-import ReactPaginate from "react-paginate";
 import NoteModal from "../NoteModal/NoteModal";
 import SearchBox from "../SearchBox/SearchBox";
 import { useDebounce } from "use-debounce";
+import Pagination from "../Pagination/Pagination";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -46,16 +46,10 @@ function App() {
         </button>
       </header>
       {data && data.totalPages > 1 && (
-        <ReactPaginate
-          pageCount={data.totalPages}
-          pageRangeDisplayed={5}
-          marginPagesDisplayed={1}
-          onPageChange={({ selected }) => setPage(selected + 1)}
-          forcePage={page - 1}
-          containerClassName={css.pagination}
-          activeClassName={css.active}
-          nextLabel="→"
-          previousLabel="←"
+        <Pagination
+          page={page}
+          totalPages={data.totalPages}
+          onPageChange={setPage}
         />
       )}
       {data?.notes.length === 0 && <p>No notes found</p>}
