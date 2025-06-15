@@ -10,7 +10,7 @@ import SearchBox from "../SearchBox/SearchBox";
 import { useDebounce } from "use-debounce";
 
 function App() {
-  const [query, setQuery] = useState("todo");
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [debouncedQuery] = useDebounce(query, 300);
@@ -18,7 +18,7 @@ function App() {
   const { data, refetch } = useQuery({
     queryKey: ["notes", debouncedQuery, page],
     queryFn: () => fetchNotes(debouncedQuery, page),
-    enabled: debouncedQuery !== "",
+    // enabled: debouncedQuery !== "",
     placeholderData: keepPreviousData,
   });
 
@@ -60,7 +60,9 @@ function App() {
       )}
       {data?.notes.length === 0 && <p>No notes found</p>}
       {data?.notes && <NoteList notes={data.notes} onDelete={handleDelete} />}
-      {isModalOpen && <NoteModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <NoteModal onClose={() => setIsModalOpen(false)} refetch={refetch} />
+      )}
     </div>
   );
 }

@@ -31,10 +31,11 @@ interface NoteFormValues {
 }
 
 interface NoteFormProps {
+  onSuccess: () => void;
   onCancel: () => void;
 }
 
-function NoteForm({ onCancel }: NoteFormProps) {
+function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
   const initialValues: NoteFormValues = {
     title: "",
     content: "",
@@ -53,6 +54,7 @@ function NoteForm({ onCancel }: NoteFormProps) {
       });
       toast.success("Note created successfully");
       resetForm();
+      onSuccess();
     } catch {
       toast.error("Failed to create note");
     }

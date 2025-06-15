@@ -13,21 +13,16 @@ export async function fetchNotes(
   query: string,
   page: number
 ): Promise<FetchNotesResponse> {
-  const response = await axios.get<FetchNotesResponse>(BASE_URL, {
-    params: {
-      search: query,
-      page: page,
-      perPage: 12,
-    },
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-    },
-  });
-  return response.data;
-}
+  const params: Record<string, string | number> = {
+    page: page,
+    perPage: 12,
+  };
 
-export async function createNote(params: Omit<Note, "id">) {
-  const response = await axios.post(BASE_URL, {
+  if (query.trim() !== "") {
+    params.search = query;
+  }
+
+  const response = await axios.get<FetchNotesResponse>(BASE_URL, {
     params,
     headers: {
       Authorization: `Bearer ${API_KEY}`,
@@ -36,11 +31,17 @@ export async function createNote(params: Omit<Note, "id">) {
   return response.data;
 }
 
-export async function deleteNote(id: number) {
-  const response = await axios.delete(BASE_URL, {
-    params: {
-      id: id,
+export async function createNote(params: Omit<Note, "id">) {
+  const response = await axios.post(BASE_URL, params, {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
     },
+  });
+  return response.data;
+}
+
+export async function deleteNote(id: number) {
+  const response = await axios.delete(`${BASE_URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
     },

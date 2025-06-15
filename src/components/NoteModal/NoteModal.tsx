@@ -5,9 +5,10 @@ import { useEffect } from "react";
 
 interface NoteModalProps {
   onClose: () => void;
+  refetch: () => void;
 }
 
-function NoteModal({ onClose }: NoteModalProps) {
+function NoteModal({ onClose, refetch }: NoteModalProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -32,7 +33,13 @@ function NoteModal({ onClose }: NoteModalProps) {
       aria-modal="true"
     >
       <div className={css.modal}>
-        <NoteForm onCancel={onClose} />
+        <NoteForm
+          onSuccess={() => {
+            refetch();
+            onClose();
+          }}
+          onCancel={onClose}
+        />
       </div>
     </div>,
     document.body
