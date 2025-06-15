@@ -1,5 +1,7 @@
 // import { useState } from 'react'
 import css from "./App.module.css";
+import NoteList from "../NoteList/NoteList";
+// import { fetchNotes, createNote, deleteNote } from "../../services/noteService";
 
 function App() {
   return (
@@ -7,8 +9,9 @@ function App() {
       <header className={css.toolbar}>
         {/* Компонент SearchBox */}
         {/* Пагінація */}
-        {/* Кнопка створення нотатки */}
+        <button className={css.button}>Create note +</button>
       </header>
+      <NoteList />
     </div>
   );
 }
