@@ -31,8 +31,8 @@ export async function fetchNotes(
   return response.data;
 }
 
-export async function createNote(params: Omit<Note, "id">) {
-  const response = await axios.post(BASE_URL, params, {
+export async function createNote(params: Omit<Note, "id">): Promise<Note> {
+  const response = await axios.post<Note>(BASE_URL, params, {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
     },
@@ -40,8 +40,8 @@ export async function createNote(params: Omit<Note, "id">) {
   return response.data;
 }
 
-export async function deleteNote(id: number) {
-  const response = await axios.delete(`${BASE_URL}/${id}`, {
+export async function deleteNote(id: number): Promise<Note> {
+  const response = await axios.delete<Note>(`${BASE_URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
     },
