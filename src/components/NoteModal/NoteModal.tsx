@@ -36,7 +36,6 @@ function NoteModal({ onClose, refetch }: NoteModalProps) {
         <NoteForm
           onSuccess={() => {
             refetch();
-            onClose();
           }}
           onCancel={onClose}
         />

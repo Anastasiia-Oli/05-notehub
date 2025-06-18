@@ -4,6 +4,7 @@ import css from "./NoteForm.module.css";
 import { createNote } from "../../services/noteService";
 import type { NoteTag } from "../../types/note";
 import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const tagOptions: NoteTag[] = [
   "Todo",
@@ -36,28 +37,43 @@ interface NoteFormProps {
 }
 
 function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      toast.success("Note created successfully");
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+      onSuccess();
+      onCancel();
+    },
+    onError: () => {
+      toast.error("Failed to create note");
+    },
+  });
+
   const initialValues: NoteFormValues = {
     title: "",
     content: "",
     tag: "",
   };
 
-  const handleSubmit = async (
+  const handleSubmit = (
     values: NoteFormValues,
     { resetForm }: FormikHelpers<NoteFormValues>
   ) => {
-    try {
-      await createNote({
+    mutate(
+      {
         title: values.title,
         content: values.content,
         tag: values.tag as NoteTag,
-      });
-      toast.success("Note created successfully");
-      resetForm();
-      onSuccess();
-    } catch {
-      toast.error("Failed to create note");
-    }
+      },
+      {
+        onSuccess: () => {
+          resetForm();
+        },
+      }
+    );
   };
 
   return (
@@ -66,7 +82,7 @@ function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting, isValid }) => (
+      {(isValid) => (
         <Form className={css.form}>
           {/* Title field */}
           <div className={css.formGroup}>
@@ -118,7 +134,7 @@ function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
             <button
               type="submit"
               className={css.submitButton}
-              disabled={isSubmitting || !isValid}
+              disabled={isPending || !isValid}
             >
               Create note
             </button>
