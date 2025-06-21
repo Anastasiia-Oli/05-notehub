@@ -39,6 +39,12 @@ interface NoteFormProps {
 function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
   const queryClient = useQueryClient();
 
+  const initialValues: NoteFormValues = {
+    title: "",
+    content: "",
+    tag: "",
+  };
+
   const { mutate, isPending } = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
@@ -51,12 +57,6 @@ function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
       toast.error("Failed to create note");
     },
   });
-
-  const initialValues: NoteFormValues = {
-    title: "",
-    content: "",
-    tag: "",
-  };
 
   const handleSubmit = (
     values: NoteFormValues,

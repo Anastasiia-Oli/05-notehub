@@ -43,7 +43,7 @@ function App() {
         />
       )}
       {data?.notes.length === 0 && <p>No notes found</p>}
-      {data?.notes && <NoteList notes={data.notes} />}
+      {data?.notes && data.notes.length > 0 && <NoteList notes={data.notes} />}
       {isModalOpen && (
         <NoteModal onClose={() => setIsModalOpen(false)} refetch={refetch} />
       )}
