@@ -2,8 +2,8 @@ import { useState } from "react";
 import css from "./App.module.css";
 import NoteList from "../NoteList/NoteList";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { fetchNotes, deleteNote } from "../../services/noteService";
-import toast from "react-hot-toast";
+import { fetchNotes } from "../../services/noteService";
+// import toast from "react-hot-toast";
 import NoteModal from "../NoteModal/NoteModal";
 import SearchBox from "../SearchBox/SearchBox";
 import { useDebounce } from "use-debounce";
@@ -27,16 +27,6 @@ function App() {
     setPage(1);
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteNote(id);
-      toast.success("City deleted");
-      refetch();
-    } catch {
-      toast.error("Error deleting city");
-    }
-  };
-
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
@@ -53,7 +43,7 @@ function App() {
         />
       )}
       {data?.notes.length === 0 && <p>No notes found</p>}
-      {data?.notes && <NoteList notes={data.notes} onDelete={handleDelete} />}
+      {data?.notes && <NoteList notes={data.notes} />}
       {isModalOpen && (
         <NoteModal onClose={() => setIsModalOpen(false)} refetch={refetch} />
       )}
