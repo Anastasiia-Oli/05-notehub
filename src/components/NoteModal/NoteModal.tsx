@@ -5,10 +5,9 @@ import { useEffect } from "react";
 
 interface NoteModalProps {
   onClose: () => void;
-  refetch: () => void;
 }
 
-function NoteModal({ onClose, refetch }: NoteModalProps) {
+function NoteModal({ onClose }: NoteModalProps) {
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -39,12 +38,7 @@ function NoteModal({ onClose, refetch }: NoteModalProps) {
       aria-modal="true"
     >
       <div className={css.modal}>
-        <NoteForm
-          onSuccess={() => {
-            refetch();
-          }}
-          onCancel={onClose}
-        />
+        <NoteForm onCancel={onClose} />
       </div>
     </div>,
     document.body

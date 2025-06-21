@@ -1,10 +1,10 @@
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from "formik";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import css from "./NoteForm.module.css";
 import { createNote } from "../../services/noteService";
 import type { NoteTag } from "../../types/note";
-import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const tagOptions: NoteTag[] = [
   "Todo",
@@ -32,11 +32,10 @@ interface NoteFormValues {
 }
 
 interface NoteFormProps {
-  onSuccess: () => void;
   onCancel: () => void;
 }
 
-function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
+function NoteForm({ onCancel }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const initialValues: NoteFormValues = {
@@ -50,7 +49,6 @@ function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
     onSuccess: () => {
       toast.success("Note created successfully");
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      onSuccess();
       onCancel();
     },
     onError: () => {

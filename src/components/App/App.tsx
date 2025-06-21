@@ -1,13 +1,12 @@
 import { useState } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
 import css from "./App.module.css";
 import NoteList from "../NoteList/NoteList";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { fetchNotes } from "../../services/noteService";
-// import toast from "react-hot-toast";
+import Pagination from "../Pagination/Pagination";
 import NoteModal from "../NoteModal/NoteModal";
 import SearchBox from "../SearchBox/SearchBox";
-import { useDebounce } from "use-debounce";
-import Pagination from "../Pagination/Pagination";
+import { fetchNotes } from "../../services/noteService";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -15,7 +14,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [debouncedQuery] = useDebounce(query, 300);
 
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["notes", debouncedQuery, page],
     queryFn: () => fetchNotes(debouncedQuery, page),
     // enabled: debouncedQuery !== "",
@@ -44,9 +43,7 @@ function App() {
       )}
       {data?.notes.length === 0 && <p>No notes found</p>}
       {data?.notes && data.notes.length > 0 && <NoteList notes={data.notes} />}
-      {isModalOpen && (
-        <NoteModal onClose={() => setIsModalOpen(false)} refetch={refetch} />
-      )}
+      {isModalOpen && <NoteModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 }
